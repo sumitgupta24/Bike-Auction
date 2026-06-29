@@ -91,7 +91,7 @@ const AuctionDetail = () => {
                 <div className="text-slate-400 font-medium">Current Price</div>
                 <div className="flex items-center gap-2 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5">
                   <Clock size={16} className={isLive ? 'text-emerald-400' : 'text-slate-400'} />
-                  <Countdown targetDate={targetDate} onEnd={() => window.location.reload()} />
+                  <Countdown targetDate={targetDate} onEnd={isEnded ? null : () => window.location.reload()} />
                 </div>
               </div>
               
