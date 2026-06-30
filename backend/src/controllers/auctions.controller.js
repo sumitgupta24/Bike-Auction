@@ -1,5 +1,6 @@
 const Auction = require('../models/Auction');
 const sseService = require('../services/sse.service');
+const bidService = require('../services/bid.service');
 
 const getAuctions = async (req, res, next) => {
   try {
@@ -35,13 +36,14 @@ const getAuctionById = async (req, res, next) => {
 
 const createAuction = async (req, res, next) => {
   try {
-    const { listingId, startsAt, endsAt, reservePrice } = req.body;
+    const { listingId, startsAt, endsAt, reservePrice, maxPrice } = req.body;
 
     const auction = await Auction.create({
       listingId,
       startsAt,
       endsAt,
       reservePrice,
+      maxPrice: maxPrice || null,
       currentPrice: 0,
       status: 'scheduled'
     });
@@ -66,9 +68,23 @@ const streamAuction = (req, res) => {
   });
 };
 
+const purchaseAuction = async (req, res, next) => {
+  try {
+    const auction = await bidService.purchaseAuction(req.params.id, req.user._id);
+    res.json({ data: auction, meta: { requestId: req.requestId } });
+  } catch (error) {
+    if (error.status) {
+      res.status(error.status).json({ error: { code: error.code, message: error.message }, meta: { requestId: req.requestId } });
+    } else {
+      next(error);
+    }
+  }
+};
+
 module.exports = {
   getAuctions,
   getAuctionById,
   createAuction,
-  streamAuction
+  streamAuction,
+  purchaseAuction
 };

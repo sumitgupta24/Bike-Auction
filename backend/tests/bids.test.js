@@ -87,4 +87,42 @@ describe('Bids API', () => {
     expect(res.statusCode).toEqual(403);
     expect(res.body.error.code).toEqual('FORBIDDEN');
   });
+
+  describe('Direct Purchase API', () => {
+    it('should directly purchase for maxPrice, return 200, set status ended and assign winnerId', async () => {
+      const buyerToken = await loginUser('buyer@test.com', 'buyer123');
+      
+      const res = await request(app)
+        .post(`/api/auctions/${testData.liveAuction._id}/purchase`)
+        .set('Authorization', `Bearer ${buyerToken}`);
+        
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.data.currentPrice).toEqual(3000);
+      expect(res.body.data.status).toEqual('ended');
+      expect(res.body.data.winnerId).toEqual(testData.buyer._id.toString());
+    });
+
+    it('should return 403 when seller attempts direct purchase', async () => {
+      const sellerToken = await loginUser('seller@test.com', 'seller123');
+      
+      const res = await request(app)
+        .post(`/api/auctions/${testData.liveAuction._id}/purchase`)
+        .set('Authorization', `Bearer ${sellerToken}`);
+        
+      expect(res.statusCode).toEqual(403);
+      expect(res.body.error.code).toEqual('FORBIDDEN');
+    });
+
+    it('should return 400 when purchasing non-live auction', async () => {
+      const buyerToken = await loginUser('buyer@test.com', 'buyer123');
+      
+      const res = await request(app)
+        .post(`/api/auctions/${testData.scheduledAuction._id}/purchase`)
+        .set('Authorization', `Bearer ${buyerToken}`);
+        
+      expect(res.statusCode).toEqual(400);
+      expect(res.body.error.code).toEqual('AUCTION_NOT_LIVE');
+    });
+  });
 });
+

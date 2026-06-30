@@ -65,6 +65,7 @@ const seedDB = async () => {
     startsAt: now,
     endsAt: endsLive,
     reservePrice: 1500,
+    maxPrice: 3000,
     currentPrice: 1000,
     status: 'live'
   });
@@ -74,6 +75,7 @@ const seedDB = async () => {
     startsAt: now,
     endsAt: endsLive,
     reservePrice: 2000,
+    maxPrice: 4000,
     currentPrice: 1800,
     status: 'live'
   });

@@ -4,12 +4,16 @@ import api from '../lib/api';
 import Countdown from '../components/Countdown';
 import BidForm from '../components/BidForm';
 import BidFeed from '../components/BidFeed';
-import { ArrowLeft, Clock, Info } from 'lucide-react';
+import { ArrowLeft, Clock, Info, Zap } from 'lucide-react';
+import { useAuth } from '../lib/AuthContext';
 
 const AuctionDetail = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const [auction, setAuction] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+  const [purchaseError, setPurchaseError] = useState('');
 
   useEffect(() => {
     const fetchAuction = async () => {
@@ -29,8 +33,28 @@ const AuctionDetail = () => {
     setAuction(prev => ({
       ...prev,
       currentPrice: data.currentPrice,
-      bidCount: data.bidCount
+      bidCount: data.bidCount,
+      status: data.status || prev.status,
+      winnerId: data.winnerId || prev.winnerId
     }));
+  };
+
+  const handlePurchase = async () => {
+    if (!user || user.role !== 'buyer') return;
+    if (!window.confirm(`Are you sure you want to directly purchase this bike for $${auction.maxPrice}? This will immediately end the auction.`)) {
+      return;
+    }
+    setPurchaseLoading(true);
+    setPurchaseError('');
+    try {
+      const res = await api.get(`/auctions/${auction._id}`); // refresh before purchase or post directly
+      const purchaseRes = await api.post(`/auctions/${auction._id}/purchase`);
+      setAuction(purchaseRes.data.data);
+    } catch (err) {
+      setPurchaseError(err.response?.data?.error?.message || 'Failed to purchase bike');
+    } finally {
+      setPurchaseLoading(false);
+    }
   };
 
   if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-sky-400 font-bold text-xl">Loading Auction...</div>;
@@ -101,6 +125,38 @@ const AuctionDetail = () => {
 
               {isLive ? (
                 <div className="space-y-4">
+                  {auction.maxPrice > 0 && auction.currentPrice < auction.maxPrice && (
+                    <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 p-4 rounded-2xl border border-amber-500/30">
+                      <div className="flex justify-between items-center mb-3">
+                        <div>
+                          <div className="text-amber-400 font-bold flex items-center gap-1.5 text-sm">
+                            <Zap size={16} className="fill-amber-400" /> Direct Purchase Option
+                          </div>
+                          <div className="text-slate-300 text-xs">Skip the bidding and buy immediately</div>
+                        </div>
+                        <div className="text-2xl font-black text-amber-400">${auction.maxPrice}</div>
+                      </div>
+                      {purchaseError && (
+                        <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-3 py-2 rounded-xl text-xs mb-3">
+                          {purchaseError}
+                        </div>
+                      )}
+                      {user && user.role === 'buyer' ? (
+                        <button
+                          onClick={handlePurchase}
+                          disabled={purchaseLoading}
+                          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2"
+                        >
+                          <Zap size={18} className="fill-slate-950" />
+                          {purchaseLoading ? 'Purchasing...' : `⚡ Buy Now for $${auction.maxPrice}`}
+                        </button>
+                      ) : (
+                        <div className="text-center text-xs text-slate-400 py-1">
+                          Log in as a buyer to buy directly
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <BidForm auctionId={auction._id} currentPrice={auction.currentPrice || auction.reservePrice} />
                 </div>
               ) : isEnded ? (

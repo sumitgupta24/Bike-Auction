@@ -67,6 +67,7 @@ const seedDB = async () => {
       startsAt: new Date(now.getTime() - 10 * 60 * 1000),
       endsAt: new Date(now.getTime() + 20 * 60 * 1000),
       reservePrice: 1500,
+      maxPrice: 3500,
       currentPrice: 1900,
       bidCount: 3,
       status: 'live'
@@ -83,6 +84,7 @@ const seedDB = async () => {
       startsAt: new Date(now.getTime() - 5 * 60 * 1000),
       endsAt: new Date(now.getTime() + 30 * 60 * 1000),
       reservePrice: 2200,
+      maxPrice: 4500,
       currentPrice: 2500,
       bidCount: 2,
       status: 'live'
@@ -98,6 +100,7 @@ const seedDB = async () => {
       startsAt: new Date(now.getTime() + 15 * 60 * 1000),
       endsAt: new Date(now.getTime() + 60 * 60 * 1000),
       reservePrice: 3000,
+      maxPrice: 5000,
       currentPrice: 0,
       bidCount: 0,
       status: 'scheduled'
@@ -118,6 +121,7 @@ const seedDB = async () => {
         Auction: 'Auction 1 (Trek Domane SL 6)',
         Status: auction1.status,
         CurrentPrice: `$${auction1.currentPrice}`,
+        MaxPrice: `$${auction1.maxPrice}`,
         BidCount: auction1.bidCount,
         Seller: 'seller1@test.com'
       },
@@ -125,6 +129,7 @@ const seedDB = async () => {
         Auction: 'Auction 2 (Specialized Stumpjumper EVO)',
         Status: auction2.status,
         CurrentPrice: `$${auction2.currentPrice}`,
+        MaxPrice: `$${auction2.maxPrice}`,
         BidCount: auction2.bidCount,
         Seller: 'seller2@test.com'
       },
@@ -132,6 +137,7 @@ const seedDB = async () => {
         Auction: 'Auction 3 (Cannondale SuperSix EVO)',
         Status: auction3.status,
         CurrentPrice: `$${auction3.currentPrice}`,
+        MaxPrice: `$${auction3.maxPrice}`,
         BidCount: auction3.bidCount,
         Seller: 'seller1@test.com'
       }

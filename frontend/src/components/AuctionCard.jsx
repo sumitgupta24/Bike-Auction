@@ -18,10 +18,15 @@ const AuctionCard = ({ auction }) => {
           alt={`${auction.listingId.year} ${auction.listingId.make} ${auction.listingId.model}`}
           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
           {isLive && <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold backdrop-blur-md animate-pulse">LIVE</span>}
           {isScheduled && <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-semibold backdrop-blur-md">UPCOMING</span>}
           {isEnded && <span className="px-3 py-1 rounded-full bg-slate-500/20 text-slate-300 border border-slate-500/30 text-xs font-semibold backdrop-blur-md">ENDED</span>}
+          {auction.maxPrice > 0 && !isEnded && (
+            <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold backdrop-blur-md">
+              ⚡ Buy Now ${auction.maxPrice}
+            </span>
+          )}
         </div>
         <div className="absolute bottom-3 left-3 right-3 flex justify-between items-center bg-black/60 backdrop-blur-md px-3 py-2 rounded-lg border border-white/10">
           <div className="flex items-center gap-2 text-slate-300">
