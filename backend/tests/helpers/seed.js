@@ -18,7 +18,12 @@ const seedDB = async () => {
 
   const admin = await User.create({ email: 'admin@test.com', passwordHash: adminPass, role: 'admin' });
   const seller = await User.create({ email: 'seller@test.com', passwordHash: sellerPass, role: 'seller' });
+  const seller1 = await User.create({ email: 'seller1@test.com', passwordHash: sellerPass, role: 'seller' });
+  const seller2 = await User.create({ email: 'seller2@test.com', passwordHash: sellerPass, role: 'seller' });
+
   const buyer = await User.create({ email: 'buyer@test.com', passwordHash: buyerPass, role: 'buyer' });
+  const buyer1 = await User.create({ email: 'buyer1@test.com', passwordHash: buyerPass, role: 'buyer' });
+  const buyer2 = await User.create({ email: 'buyer2@test.com', passwordHash: buyerPass, role: 'buyer' });
 
   const listing = await Listing.create({
     sellerId: seller._id,
@@ -27,6 +32,26 @@ const seedDB = async () => {
     year: 2022,
     description: 'Test description',
     photoUrl: 'http://test.com/photo.jpg',
+    status: 'approved'
+  });
+
+  const listing1 = await Listing.create({
+    sellerId: seller1._id,
+    make: 'Specialized',
+    model: 'Tarmac SL7',
+    year: 2023,
+    description: 'Test road bike description',
+    photoUrl: 'http://test.com/photo1.jpg',
+    status: 'approved'
+  });
+
+  const listing2 = await Listing.create({
+    sellerId: seller2._id,
+    make: 'Cannondale',
+    model: 'SystemSix',
+    year: 2023,
+    description: 'Test aero bike description',
+    photoUrl: 'http://test.com/photo2.jpg',
     status: 'approved'
   });
 
@@ -44,11 +69,20 @@ const seedDB = async () => {
     status: 'live'
   });
 
+  const liveAuction2 = await Auction.create({
+    listingId: listing1._id,
+    startsAt: now,
+    endsAt: endsLive,
+    reservePrice: 2000,
+    currentPrice: 1800,
+    status: 'live'
+  });
+
   const scheduledAuction = await Auction.create({
-    listingId: listing._id,
+    listingId: listing2._id,
     startsAt: startsScheduled,
     endsAt: endsScheduled,
-    reservePrice: 2000,
+    reservePrice: 2500,
     currentPrice: 0,
     status: 'scheduled'
   });
@@ -56,9 +90,16 @@ const seedDB = async () => {
   return {
     admin,
     seller,
+    seller1,
+    seller2,
     buyer,
+    buyer1,
+    buyer2,
     listing,
+    listing1,
+    listing2,
     liveAuction,
+    liveAuction2,
     scheduledAuction
   };
 };

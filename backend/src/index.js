@@ -10,11 +10,11 @@ const sseService = require('./services/sse.service');
 const requestId = require('./middleware/requestId');
 const errorHandler = require('./middleware/errorHandler');
 
-const authRoutes = require('./routes/auth');
-const listingRoutes = require('./routes/listings');
-const auctionRoutes = require('./routes/auctions');
-const adminRoutes = require('./routes/admin');
-const healthRoutes = require('./routes/health');
+const authRoutes = require('./routes/auth.routes');
+const listingRoutes = require('./routes/listings.routes');
+const auctionRoutes = require('./routes/auctions.routes');
+const adminRoutes = require('./routes/admin.routes');
+const healthRoutes = require('./routes/health.routes');
 
 const app = express();
 

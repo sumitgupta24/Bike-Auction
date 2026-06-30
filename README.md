@@ -39,11 +39,11 @@ A full-stack real-time bike auction platform where registered users can browse, 
 
 **Test Credentials**
 
-| Role   | Email               | Password   |
-|--------|---------------------|------------|
-| Admin  | admin@test.com      | admin123   |
-| Seller | seller@test.com     | seller123  |
-| Buyer  | buyer@test.com      | buyer123   |
+| Role   | Email                                           | Password   |
+|--------|-------------------------------------------------|------------|
+| Admin  | admin@test.com                                  | admin123   |
+| Seller | seller1@test.com, seller2@test.com              | seller123  |
+| Buyer  | buyer1@test.com, buyer2@test.com, buyer3@test.com | buyer123   |
 
 > ℹ️ Admin actions (approve listings, create auctions) are performed directly via the API using a JWT. No admin UI is provided — this was a deliberate scope decision.
 
@@ -410,12 +410,13 @@ GitHub Repo
 /
 ├── backend/
 │   ├── src/
-│   │   ├── routes/          auth.js, listings.js, auctions.js, bids.js, admin.js, health.js
-│   │   ├── middleware/       protect.js, requireRole.js, requestId.js, errorHandler.js
-│   │   ├── models/           User.js, Listing.js, Auction.js, Bid.js
-│   │   ├── services/         bid.service.js, auction.service.js, sse.service.js
-│   │   ├── lib/              logger.js, scheduler.js
-│   │   ├── db/               seed.js
+│   │   ├── routes/          auth.routes.js, listings.routes.js, auctions.routes.js, bids.routes.js, admin.routes.js, health.routes.js
+│   │   ├── controllers/     auth.controller.js, listings.controller.js, auctions.controller.js, bids.controller.js, admin.controller.js, health.controller.js
+│   │   ├── middleware/      protect.js, requireRole.js, requestId.js, errorHandler.js
+│   │   ├── models/          User.js, Listing.js, Auction.js, Bid.js
+│   │   ├── services/        bid.service.js, auction.service.js, sse.service.js
+│   │   ├── lib/             logger.js, scheduler.js
+│   │   ├── db/              seed.js
 │   │   └── index.js
 │   ├── tests/
 │   │   ├── auth.test.js

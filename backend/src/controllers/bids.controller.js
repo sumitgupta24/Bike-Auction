@@ -1,12 +1,7 @@
-const express = require('express');
 const Bid = require('../models/Bid');
 const bidService = require('../services/bid.service');
-const protect = require('../middleware/protect');
-const requireRole = require('../middleware/requireRole');
 
-const router = express.Router({ mergeParams: true });
-
-router.post('/', protect, requireRole('buyer'), async (req, res, next) => {
+const placeBid = async (req, res, next) => {
   try {
     const auctionId = req.params.id;
     const { amount } = req.body;
@@ -21,9 +16,9 @@ router.post('/', protect, requireRole('buyer'), async (req, res, next) => {
       next(error);
     }
   }
-});
+};
 
-router.get('/', async (req, res, next) => {
+const getBids = async (req, res, next) => {
   try {
     const bids = await Bid.find({ auctionId: req.params.id })
       .sort({ placedAt: -1 })
@@ -33,6 +28,9 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-module.exports = router;
+module.exports = {
+  placeBid,
+  getBids
+};

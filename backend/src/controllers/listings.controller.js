@@ -1,20 +1,15 @@
-const express = require('express');
 const Listing = require('../models/Listing');
-const protect = require('../middleware/protect');
-const requireRole = require('../middleware/requireRole');
 
-const router = express.Router();
-
-router.get('/', async (req, res, next) => {
+const getListings = async (req, res, next) => {
   try {
     const listings = await Listing.find().populate('sellerId', '-passwordHash');
     res.json({ data: listings, meta: { requestId: req.requestId } });
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.post('/', protect, requireRole('seller'), async (req, res, next) => {
+const createListing = async (req, res, next) => {
   try {
     const { make, model, year, description, photoUrl } = req.body;
     
@@ -32,6 +27,9 @@ router.post('/', protect, requireRole('seller'), async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-module.exports = router;
+module.exports = {
+  getListings,
+  createListing
+};

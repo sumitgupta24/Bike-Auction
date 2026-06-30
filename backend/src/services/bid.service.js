@@ -9,11 +9,11 @@ const placeBid = async (auctionId, bidderId, amount) => {
 
   try {
     const auction = await Auction.findById(auctionId).populate('listingId').session(session);
-    
+
     if (!auction) {
       throw { status: 404, code: 'NOT_FOUND', message: 'Auction not found' };
     }
-    
+
     if (auction.status !== 'live') {
       throw { status: 400, code: 'AUCTION_NOT_LIVE', message: 'Can only bid on live auctions' };
     }
@@ -31,7 +31,7 @@ const placeBid = async (auctionId, bidderId, amount) => {
       bidderId,
       amount
     });
-    
+
     await bid.save({ session });
 
     auction.currentPrice = amount;

@@ -1,11 +1,6 @@
-const express = require('express');
 const Listing = require('../models/Listing');
-const protect = require('../middleware/protect');
-const requireRole = require('../middleware/requireRole');
 
-const router = express.Router();
-
-router.post('/listings/:id/approve', protect, requireRole('admin'), async (req, res, next) => {
+const approveListing = async (req, res, next) => {
   try {
     const listing = await Listing.findByIdAndUpdate(
       req.params.id, 
@@ -21,6 +16,8 @@ router.post('/listings/:id/approve', protect, requireRole('admin'), async (req, 
   } catch (error) {
     next(error);
   }
-});
+};
 
-module.exports = router;
+module.exports = {
+  approveListing
+};
